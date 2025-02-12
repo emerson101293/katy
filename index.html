@@ -19,7 +19,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            flex-direction: column;
+            position: relative;
         }
 
         .hearts {
@@ -36,12 +36,12 @@
             color: red;
             font-size: 24px;
             opacity: 0.6;
-            animation: float 4s infinite ease-in-out;
+            animation: float 6s infinite ease-in-out;
         }
 
         @keyframes float {
             0% { transform: translateY(100vh) scale(0.5); opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
 
         .card {
@@ -51,6 +51,10 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             animation: fadeIn 1.5s ease-in-out;
+            position: relative;
+            z-index: 2;
+            width: 300px;
+            transition: opacity 1s, transform 1s;
         }
 
         @keyframes fadeIn {
@@ -61,6 +65,12 @@
         h1 {
             font-size: 24px;
             color: #ff4d6d;
+            animation: zoomIn 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
         }
 
         p {
@@ -85,56 +95,72 @@
             transform: scale(1.1);
         }
 
-        .hidden {
+        /* Nueva tarjeta que aparecerá */
+        .new-card {
             display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
+            position: relative;
+            z-index: 2;
+            width: 300px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s, transform 1s;
+        }
+
+        /* Imagen romántica */
+        .new-card img {
+            width: 100%;
+            border-radius: 10px;
         }
 
     </style>
 </head>
 <body>
+
+    <!-- Corazones Animados -->
     <div class="hearts"></div>
 
-    <div id="page1" class="card">
+    <!-- Tarjeta de Invitación -->
+    <div class="card" id="card">
         <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
         <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
         <p>¿Aceptas? 😊</p>
-        <button class="btn" onclick="mostrarSegundaPagina()">Sí, acepto 💘</button>
+        <button class="btn" onclick="cambiarTarjeta()">Sí, acepto 💘</button>
     </div>
 
-    <div id="page2" class="card hidden">
-        <h1>¡Gracias por aceptar! 🌟</h1>
-        <p>¡Eres el amor de mi vida! 💖</p>
-        <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="San Valentín" width="200px">
-        <button class="btn" onclick="volverInicio()">Volver al inicio</button>
+    <!-- Nueva tarjeta con imagen -->
+    <div class="new-card" id="newCard">
+        <h1>💘 ¡Eres lo mejor de mi vida! 💘</h1>
+        <img src="https://source.unsplash.com/300x200/?love,couple" alt="Imagen romántica">
+        <p>Gracias por aceptar, mi amor. ¡Nos vemos en nuestra cita! 😘💕</p>
     </div>
 
     <script>
-        function mostrarSegundaPagina() {
-            document.getElementById('page1').classList.add('hidden');
-            document.getElementById('page2').classList.remove('hidden');
-        }
+        function cambiarTarjeta() {
+            let card = document.getElementById("card");
+            let newCard = document.getElementById("newCard");
 
-        function volverInicio() {
-            document.getElementById('page2').classList.add('hidden');
-            document.getElementById('page1').classList.remove('hidden');
-        }
+            // Ocultar la tarjeta original
+            card.style.opacity = "0";
+            card.style.transform = "scale(0.8)";
 
-        function crearCorazones() {
-            const heartsContainer = document.querySelector('.hearts');
-            for (let i = 0; i < 20; i++) {
-                let heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.innerHTML = '❤️';
-                heart.style.left = `${Math.random() * 100}vw`;
-                heart.style.animationDuration = `${2 + Math.random() * 3}s`;
-                heartsContainer.appendChild(heart);
+            setTimeout(() => {
+                card.style.display = "none";
+                newCard.style.display = "block";
+
+                // Mostrar la nueva tarjeta con animación
                 setTimeout(() => {
-                    heart.remove();
-                }, 5000);
-            }
+                    newCard.style.opacity = "1";
+                    newCard.style.transform = "scale(1)";
+                }, 100);
+            }, 1000);
         }
-
-        setInterval(crearCorazones, 500);
     </script>
+
 </body>
 </html>
