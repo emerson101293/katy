@@ -19,28 +19,38 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            position: relative;
-        }
-
-        .container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        .card, .new-card {
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            opacity: 0.6;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        .card {
             background: white;
             padding: 20px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1s ease-in-out;
-            position: absolute;
-            width: 100%;
-            transition: opacity 0.8s, transform 0.8s;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         @keyframes fadeIn {
@@ -75,153 +85,56 @@
             transform: scale(1.1);
         }
 
-        .new-card {
+        .hidden {
             display: none;
-            opacity: 0;
-            transform: scale(0.8);
         }
 
-        .new-card img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        /* Explosión de emojis */
-        .emoji-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            top: 0;
-            left: 0;
-        }
-
-        .emoji {
-            position: absolute;
-            font-size: 30px;
-            opacity: 0;
-            animation: explode 1.5s forwards ease-out;
-        }
-
-        @keyframes explode {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.5);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(2);
-            }
-        }
     </style>
 </head>
 <body>
+    <div class="hearts"></div>
 
-    <div class="container">
-        <!-- Tarjeta de Invitación -->
-        <div class="card" id="card">
-            <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
-            <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
-            <p>¿Aceptas? 😊</p>
-            <button class="btn" onclick="cambiarTarjeta()">Sí, acepto 💘</button>
-        </div>
-
-        <!-- Nueva tarjeta con GIF -->
-        <div class="new-card" id="newCard">
-            <h1>💘 ¡Eres lo mejor de mi vida! 💘</h1>
-            <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="Romántico">
-            <p>Gracias por aceptar, mi amor. ¡Nos vemos en nuestra cita! 😘💕</p>
-        </div>
+    <div id="page1" class="card">
+        <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
+        <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
+        <p>¿Aceptas? 😊</p>
+        <button class="btn" onclick="mostrarSegundaPagina()">Sí, acepto 💘</button>
     </div>
 
-    <!-- Contenedor de emojis explosivos -->
-    <div class="emoji-container" id="emojiContainer"></div>
+    <div id="page2" class="card hidden">
+        <h1>¡Gracias por aceptar! 🌟</h1>
+        <p>¡Eres el amor de mi vida! 💖</p>
+        <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="San Valentín" width="200px">
+        <button class="btn" onclick="volverInicio()">Volver al inicio</button>
+    </div>
 
     <script>
-        function cambiarTarjeta() {
-            let card = document.getElementById("card");
-            let newCard = document.getElementById("newCard");
-
-            // Ocultar la tarjeta original
-            card.style.opacity = "0";
-            card.style.transform = "scale(0.8)";
-
-            setTimeout(() => {
-                card.style.display = "none";
-                newCard.style.display = "flex";
-                newCard.style.flexDirection = "column";
-                newCard.style.alignItems = "center";
-
-                // Mostrar la nueva tarjeta con animación
-                setTimeout(() => {
-                    newCard.style.opacity = "1";
-                    newCard.style.transform = "scale(1)";
-                    
-                    // Iniciar la explosión de emojis después del cambio de tarjeta
-                    explosionEmojis();
-                }, 100);
-            }, 800);
+        function mostrarSegundaPagina() {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
         }
 
-        function explosionEmojis() {
-            let emojiContainer = document.getElementById("emojiContainer");
-            let emojis = ["😍", "💋", "💖", "🥰", "😘", "❤️"];
+        function volverInicio() {
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page1').classList.remove('hidden');
+        }
 
-            for (let i = 0; i < 15; i++) {
-                let emoji = document.createElement("div");
-                emoji.classList.add("emoji");
-                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-
-                // Ubicación inicial a los lados de la pantalla
-                let side = Math.random() < 0.5 ? "left" : "right";
-                let startX = side === "left" ? "-50px" : "100vw";
-                let startY = `${Math.random() * 100}vh`;
-                let centerX = window.innerWidth / 2 - 20; // Centro ajustado
-                let centerY = window.innerHeight / 2 - 20;
-
-                emoji.style.position = "fixed";
-                emoji.style.left = startX;
-                emoji.style.top = startY;
-
-                // Crear animación hacia el centro
-                let duration = 1 + Math.random() * 0.5;
-                emoji.style.animation = `explode ${duration}s ${Math.random() * 0.5}s forwards`;
-
-                let keyframes = `
-                    @keyframes explode${i} {
-                        0% {
-                            opacity: 1;
-                            left: ${startX};
-                            top: ${startY};
-                            transform: scale(1);
-                        }
-                        70% {
-                            transform: scale(1.5);
-                        }
-                        100% {
-                            opacity: 0;
-                            left: ${centerX}px;
-                            top: ${centerY}px;
-                            transform: scale(2);
-                        }
-                    }
-                `;
-
-                let styleSheet = document.styleSheets[0];
-                styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-
-                emoji.style.animation = `explode${i} ${duration}s forwards`;
-
-                emojiContainer.appendChild(emoji);
-
-                setTimeout(() => emoji.remove(), 2000);
+        function crearCorazones() {
+            const heartsContainer = document.querySelector('.hearts');
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDuration = `${2 + Math.random() * 3}s`;
+                heartsContainer.appendChild(heart);
+                setTimeout(() => {
+                    heart.remove();
+                }, 5000);
             }
         }
-    </script>
 
+        setInterval(crearCorazones, 500);
+    </script>
 </body>
 </html>
-
