@@ -43,12 +43,6 @@
         h1 {
             font-size: 24px;
             color: #ff4d6d;
-            animation: zoomIn 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
         }
 
         p {
@@ -101,6 +95,8 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            top: 0;
+            left: 0;
         }
 
         .emoji {
@@ -113,14 +109,14 @@
         @keyframes explode {
             0% {
                 opacity: 1;
-                transform: scale(1) translateX(0);
+                transform: scale(1);
             }
             50% {
                 transform: scale(1.5);
             }
             100% {
                 opacity: 0;
-                transform: scale(2) translateX(0) translateY(0);
+                transform: scale(2) translateY(-30px);
             }
         }
     </style>
@@ -149,49 +145,7 @@
         function cambiarTarjeta() {
             let card = document.getElementById("card");
             let newCard = document.getElementById("newCard");
-            let emojiContainer = document.getElementById("emojiContainer");
 
             // Ocultar la tarjeta original
             card.style.opacity = "0";
-            card.style.transform = "scale(0.8)";
 
-            setTimeout(() => {
-                card.style.display = "none";
-                newCard.style.display = "block";
-
-                // Mostrar la nueva tarjeta con animación
-                setTimeout(() => {
-                    newCard.style.opacity = "1";
-                    newCard.style.transform = "scale(1)";
-                    explosionEmojis();
-                }, 100);
-            }, 1000);
-        }
-
-        function explosionEmojis() {
-            let emojiContainer = document.getElementById("emojiContainer");
-            let emojis = ["😍", "💋", "💖", "🥰", "😘", "❤️"];
-
-            for (let i = 0; i < 15; i++) {
-                let emoji = document.createElement("div");
-                emoji.classList.add("emoji");
-                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-                
-                // Posición en los lados (izquierda o derecha)
-                let side = Math.random() < 0.5 ? "left" : "right";
-                emoji.style[side] = "-50px"; // Fuera de pantalla al inicio
-                emoji.style.top = `${Math.random() * 100}vh`; // Posición aleatoria en altura
-                
-                // Animación de movimiento al centro
-                emoji.style.animation = `explode 1.5s ${Math.random() * 0.5}s forwards`;
-
-                emojiContainer.appendChild(emoji);
-
-                // Eliminar después de la animación
-                setTimeout(() => emoji.remove(), 2000);
-            }
-        }
-    </script>
-
-</body>
-</html>
