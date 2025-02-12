@@ -22,7 +22,6 @@
             position: relative;
         }
 
-        /* Fondo de Corazones Animados */
         .hearts {
             position: fixed;
             width: 100%;
@@ -45,7 +44,6 @@
             100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
 
-        /* Tarjeta de Invitación */
         .card {
             background: white;
             padding: 20px;
@@ -55,6 +53,8 @@
             animation: fadeIn 1.5s ease-in-out;
             position: relative;
             z-index: 2;
+            width: 300px;
+            transition: opacity 1s, transform 1s;
         }
 
         @keyframes fadeIn {
@@ -62,9 +62,8 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* Efecto de zoom en el título */
         h1 {
-            font-size: 26px;
+            font-size: 24px;
             color: #ff4d6d;
             animation: zoomIn 2s ease-in-out infinite alternate;
         }
@@ -80,7 +79,6 @@
             margin: 10px 0;
         }
 
-        /* Botón Interactivo */
         .btn {
             background-color: #ff4d6d;
             color: white;
@@ -97,11 +95,27 @@
             transform: scale(1.1);
         }
 
-        /* Contenedor de la música */
-        .audio-container {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+        /* Nueva tarjeta que aparecerá */
+        .new-card {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
+            position: relative;
+            z-index: 2;
+            width: 300px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s, transform 1s;
+        }
+
+        /* Imagen romántica */
+        .new-card img {
+            width: 100%;
+            border-radius: 10px;
         }
 
     </style>
@@ -112,42 +126,40 @@
     <div class="hearts"></div>
 
     <!-- Tarjeta de Invitación -->
-    <div class="card">
+    <div class="card" id="card">
         <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
         <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
         <p>¿Aceptas? 😊</p>
-        <button class="btn" onclick="mostrarMensaje()">Sí, acepto 💘</button>
+        <button class="btn" onclick="cambiarTarjeta()">Sí, acepto 💘</button>
     </div>
 
-    <!-- Música de fondo -->
-    <div class="audio-container">
-        <audio id="bg-music" loop autoplay>
-            <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-        </audio>
+    <!-- Nueva tarjeta con imagen -->
+    <div class="new-card" id="newCard">
+        <h1>💘 ¡Eres lo mejor de mi vida! 💘</h1>
+        <img src="https://source.unsplash.com/300x200/?love,couple" alt="Imagen romántica">
+        <p>Gracias por aceptar, mi amor. ¡Nos vemos en nuestra cita! 😘💕</p>
     </div>
 
     <script>
-        function mostrarMensaje() {
-            alert('¡Sabía que dirías que sí! 💕 Te amo 😘');
-        }
+        function cambiarTarjeta() {
+            let card = document.getElementById("card");
+            let newCard = document.getElementById("newCard");
 
-        function crearCorazones() {
-            const heartsContainer = document.querySelector('.hearts');
-            for (let i = 0; i < 15; i++) {
-                let heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.innerHTML = '❤️';
-                heart.style.left = `${Math.random() * 100}vw`;
-                heart.style.animationDuration = `${4 + Math.random() * 3}s`;
-                heartsContainer.appendChild(heart);
+            // Ocultar la tarjeta original
+            card.style.opacity = "0";
+            card.style.transform = "scale(0.8)";
 
+            setTimeout(() => {
+                card.style.display = "none";
+                newCard.style.display = "block";
+
+                // Mostrar la nueva tarjeta con animación
                 setTimeout(() => {
-                    heart.remove();
-                }, 7000);
-            }
+                    newCard.style.opacity = "1";
+                    newCard.style.transform = "scale(1)";
+                }, 100);
+            }, 1000);
         }
-
-        setInterval(crearCorazones, 800);
     </script>
 
 </body>
