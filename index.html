@@ -22,28 +22,6 @@
             position: relative;
         }
 
-        .hearts {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-
-        .heart {
-            position: absolute;
-            color: red;
-            font-size: 24px;
-            opacity: 0.6;
-            animation: float 6s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-        }
-
         .card {
             background: white;
             padding: 20px;
@@ -95,7 +73,7 @@
             transform: scale(1.1);
         }
 
-        /* Nueva tarjeta que aparecerá */
+        /* Segunda tarjeta con GIF */
         .new-card {
             display: none;
             background: white;
@@ -112,38 +90,66 @@
             transition: opacity 1s, transform 1s;
         }
 
-        /* Imagen romántica */
         .new-card img {
             width: 100%;
             border-radius: 10px;
         }
 
+        /* Explosión de emojis */
+        .emoji-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+            animation: explode 1.5s forwards ease-out;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateX(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(2) translateX(0) translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Corazones Animados -->
-    <div class="hearts"></div>
-
     <!-- Tarjeta de Invitación -->
     <div class="card" id="card">
-        <h1>💖 ¡Feliz San Valentín, mi princesa! 💖</h1>
+        <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
         <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
         <p>¿Aceptas? 😊</p>
         <button class="btn" onclick="cambiarTarjeta()">Sí, acepto 💘</button>
     </div>
 
-    <!-- Nueva tarjeta con imagen -->
+    <!-- Nueva tarjeta con GIF -->
     <div class="new-card" id="newCard">
         <h1>💘 ¡Eres lo mejor de mi vida! 💘</h1>
-        <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="Imagen romántica">
+        <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="Romántico">
         <p>Gracias por aceptar, mi amor. ¡Nos vemos en nuestra cita! 😘💕</p>
     </div>
+
+    <!-- Contenedor de emojis explosivos -->
+    <div class="emoji-container" id="emojiContainer"></div>
 
     <script>
         function cambiarTarjeta() {
             let card = document.getElementById("card");
             let newCard = document.getElementById("newCard");
+            let emojiContainer = document.getElementById("emojiContainer");
 
             // Ocultar la tarjeta original
             card.style.opacity = "0";
@@ -157,11 +163,35 @@
                 setTimeout(() => {
                     newCard.style.opacity = "1";
                     newCard.style.transform = "scale(1)";
+                    explosionEmojis();
                 }, 100);
             }, 1000);
+        }
+
+        function explosionEmojis() {
+            let emojiContainer = document.getElementById("emojiContainer");
+            let emojis = ["😍", "💋", "💖", "🥰", "😘", "❤️"];
+
+            for (let i = 0; i < 15; i++) {
+                let emoji = document.createElement("div");
+                emoji.classList.add("emoji");
+                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                // Posición en los lados (izquierda o derecha)
+                let side = Math.random() < 0.5 ? "left" : "right";
+                emoji.style[side] = "-50px"; // Fuera de pantalla al inicio
+                emoji.style.top = `${Math.random() * 100}vh`; // Posición aleatoria en altura
+                
+                // Animación de movimiento al centro
+                emoji.style.animation = `explode 1.5s ${Math.random() * 0.5}s forwards`;
+
+                emojiContainer.appendChild(emoji);
+
+                // Eliminar después de la animación
+                setTimeout(() => emoji.remove(), 2000);
+            }
         }
     </script>
 
 </body>
 </html>
-
