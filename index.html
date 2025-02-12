@@ -24,7 +24,11 @@
 
         .container {
             position: relative;
-            width: 300px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card, .new-card {
@@ -109,7 +113,7 @@
             }
             100% {
                 opacity: 0;
-                transform: scale(2) translateY(-30px);
+                transform: scale(2);
             }
         }
     </style>
@@ -147,7 +151,9 @@
 
             setTimeout(() => {
                 card.style.display = "none";
-                newCard.style.display = "block";
+                newCard.style.display = "flex";
+                newCard.style.flexDirection = "column";
+                newCard.style.alignItems = "center";
 
                 // Mostrar la nueva tarjeta con animación
                 setTimeout(() => {
@@ -169,19 +175,45 @@
                 emoji.classList.add("emoji");
                 emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
 
+                // Ubicación inicial a los lados de la pantalla
                 let side = Math.random() < 0.5 ? "left" : "right";
-                emoji.style[side] = "-50px"; 
-                emoji.style.top = `${Math.random() * 100}vh`;
-
-                // Movimiento desde los lados al centro
-                let centerX = window.innerWidth / 2;
-                let randomX = centerX - (Math.random() * 100 - 50);
+                let startX = side === "left" ? "-50px" : "100vw";
+                let startY = `${Math.random() * 100}vh`;
+                let centerX = window.innerWidth / 2 - 20; // Centro ajustado
+                let centerY = window.innerHeight / 2 - 20;
 
                 emoji.style.position = "fixed";
-                emoji.style.left = side === "left" ? "-30px" : "100vw";
-                emoji.style.top = `${Math.random() * 80}vh`;
+                emoji.style.left = startX;
+                emoji.style.top = startY;
 
-                emoji.style.animation = `explode 1.5s ${Math.random() * 0.5}s forwards`;
+                // Crear animación hacia el centro
+                let duration = 1 + Math.random() * 0.5;
+                emoji.style.animation = `explode ${duration}s ${Math.random() * 0.5}s forwards`;
+
+                let keyframes = `
+                    @keyframes explode${i} {
+                        0% {
+                            opacity: 1;
+                            left: ${startX};
+                            top: ${startY};
+                            transform: scale(1);
+                        }
+                        70% {
+                            transform: scale(1.5);
+                        }
+                        100% {
+                            opacity: 0;
+                            left: ${centerX}px;
+                            top: ${centerY}px;
+                            transform: scale(2);
+                        }
+                    }
+                `;
+
+                let styleSheet = document.styleSheets[0];
+                styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+
+                emoji.style.animation = `explode${i} ${duration}s forwards`;
 
                 emojiContainer.appendChild(emoji);
 
@@ -192,3 +224,4 @@
 
 </body>
 </html>
+
