@@ -22,17 +22,21 @@
             position: relative;
         }
 
-        .card {
+        .container {
+            position: relative;
+            width: 300px;
+        }
+
+        .card, .new-card {
             background: white;
             padding: 20px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1.5s ease-in-out;
-            position: relative;
-            z-index: 2;
-            width: 300px;
-            transition: opacity 1s, transform 1s;
+            animation: fadeIn 1s ease-in-out;
+            position: absolute;
+            width: 100%;
+            transition: opacity 0.8s, transform 0.8s;
         }
 
         @keyframes fadeIn {
@@ -67,21 +71,10 @@
             transform: scale(1.1);
         }
 
-        /* Segunda tarjeta con GIF */
         .new-card {
             display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1.5s ease-in-out;
-            position: relative;
-            z-index: 2;
-            width: 300px;
             opacity: 0;
             transform: scale(0.8);
-            transition: opacity 1s, transform 1s;
         }
 
         .new-card img {
@@ -123,19 +116,21 @@
 </head>
 <body>
 
-    <!-- Tarjeta de Invitación -->
-    <div class="card" id="card">
-        <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
-        <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
-        <p>¿Aceptas? 😊</p>
-        <button class="btn" onclick="cambiarTarjeta()">Sí, acepto 💘</button>
-    </div>
+    <div class="container">
+        <!-- Tarjeta de Invitación -->
+        <div class="card" id="card">
+            <h1>💖 ¡Feliz San Valentín, mi amor! 💖</h1>
+            <p>Te invito a una cita especial el <strong>14 de febrero</strong>. 💕</p>
+            <p>¿Aceptas? 😊</p>
+            <button class="btn" onclick="cambiarTarjeta()">Sí, acepto 💘</button>
+        </div>
 
-    <!-- Nueva tarjeta con GIF -->
-    <div class="new-card" id="newCard">
-        <h1>💘 ¡Eres lo mejor de mi vida! 💘</h1>
-        <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="Romántico">
-        <p>Gracias por aceptar, mi amor. ¡Nos vemos en nuestra cita! 😘💕</p>
+        <!-- Nueva tarjeta con GIF -->
+        <div class="new-card" id="newCard">
+            <h1>💘 ¡Eres lo mejor de mi vida! 💘</h1>
+            <img src="https://i.pinimg.com/originals/9b/dc/c6/9bdcc6206c1d36a37149d31108c6bb41.gif" alt="Romántico">
+            <p>Gracias por aceptar, mi amor. ¡Nos vemos en nuestra cita! 😘💕</p>
+        </div>
     </div>
 
     <!-- Contenedor de emojis explosivos -->
@@ -148,4 +143,52 @@
 
             // Ocultar la tarjeta original
             card.style.opacity = "0";
+            card.style.transform = "scale(0.8)";
 
+            setTimeout(() => {
+                card.style.display = "none";
+                newCard.style.display = "block";
+
+                // Mostrar la nueva tarjeta con animación
+                setTimeout(() => {
+                    newCard.style.opacity = "1";
+                    newCard.style.transform = "scale(1)";
+                    
+                    // Iniciar la explosión de emojis después del cambio de tarjeta
+                    explosionEmojis();
+                }, 100);
+            }, 800);
+        }
+
+        function explosionEmojis() {
+            let emojiContainer = document.getElementById("emojiContainer");
+            let emojis = ["😍", "💋", "💖", "🥰", "😘", "❤️"];
+
+            for (let i = 0; i < 15; i++) {
+                let emoji = document.createElement("div");
+                emoji.classList.add("emoji");
+                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+
+                let side = Math.random() < 0.5 ? "left" : "right";
+                emoji.style[side] = "-50px"; 
+                emoji.style.top = `${Math.random() * 100}vh`;
+
+                // Movimiento desde los lados al centro
+                let centerX = window.innerWidth / 2;
+                let randomX = centerX - (Math.random() * 100 - 50);
+
+                emoji.style.position = "fixed";
+                emoji.style.left = side === "left" ? "-30px" : "100vw";
+                emoji.style.top = `${Math.random() * 80}vh`;
+
+                emoji.style.animation = `explode 1.5s ${Math.random() * 0.5}s forwards`;
+
+                emojiContainer.appendChild(emoji);
+
+                setTimeout(() => emoji.remove(), 2000);
+            }
+        }
+    </script>
+
+</body>
+</html>
